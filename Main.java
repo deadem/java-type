@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     private static void sleepMs(int ms) {
@@ -12,29 +13,32 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        List<List<String>> frames = new ArrayList<>();
-
-        frames.add(List.of(
-                "███",
-                "█",
-                "███",
-                "█",
-                "███"
-        ));
-
-        final int frameDelayMs = 5;
-        final int holdLastMs = 1500;
-
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
         Cursor.hide();
 
-        for (double i = 2; i < 52; i *= 1.2) {
-            Cursor.clearScreen();
-            Term.render(frames.get(0), Term.TERM_COLS / 2, Term.TERM_ROWS / 2, 8.0 / i, 86);
-            sleepMs(frameDelayMs);
+        String line = "";
+        int x = Term.TERM_COLS / 2;
+        int y = Term.TERM_ROWS / 2;
+
+        for (char c : input.toCharArray()) {
+            List<String> letter = Letters.letter(c);
+
+            if (letter.size() > 0) {
+                for (double i = 2; i < 52; i *= 1.2) {
+                    Cursor.clearScreen();
+                    Cursor.move(y, x);
+                    System.out.print(line);
+                    Term.render(letter, x + line.length(), y, 8.0 / i, 86);
+                    sleepMs(7);
+                }
+            }
+            line += Character.toUpperCase(c);
+            Cursor.move(y, x);
+            System.out.print(line);
         }
 
         Cursor.show();
-
         Cursor.move(Term.TERM_ROWS, 1);
         Cursor.resetColor();
         System.out.println();

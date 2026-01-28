@@ -13,7 +13,6 @@ public class Term {
     public static void render(List<String> art, int col, int row, double size, int color) {
         int h = art.size();
         int w = maxLineWidth(art);
-        // System.out.print(size);
         Cursor.color(color);
 
         int centerH = (int)(h * size / 2);

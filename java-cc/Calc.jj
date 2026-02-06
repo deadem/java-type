@@ -2,29 +2,40 @@ PARSER_BEGIN(Calc)
 public class Calc {
   public static void main(String[] args) throws ParseException {
     Calc parser = new Calc(System.in);
-    double result = parser.Start();
+    double result = parser.Expression();
     System.out.println("Sum: " + result);
   }
 }
 PARSER_END(Calc)
 
-SKIP : { " " }
+SKIP : {
+  " " | "\t" | "\n" | "\r"
+}
 
 TOKEN : {
-  <NUMBER: (["0"-"9"])+ >
-  | "+"
+  < NUMBER: (["0"-"9"])+ >
 }
 
-double Start() :
+int Value() :
 {
-  double left, right;
-  Token tok;
+  Token t;
 }
 {
-  tok = <NUMBER>
-  { left = Double.parseDouble(tok.image); }
-  "+"
-  tok = <NUMBER>
-  { right = Double.parseDouble(tok.image); }
-  { return left + right; }
+  t = <NUMBER>
+  { return Integer.parseInt(t.image); }
+}
+
+int Expression() :
+{
+  int sum;
+  int value;
+}
+{
+  sum = Value()
+  (
+    "+" value = Value()
+    { sum = sum + value; }
+  )*
+  <EOF>
+  { return sum; }
 }

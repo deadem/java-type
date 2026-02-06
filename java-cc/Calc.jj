@@ -1,0 +1,30 @@
+PARSER_BEGIN(Calc)
+public class Calc {
+  public static void main(String[] args) throws ParseException {
+    Calc parser = new Calc(System.in);
+    double result = parser.Start();
+    System.out.println("Sum: " + result);
+  }
+}
+PARSER_END(Calc)
+
+SKIP : { " " }
+
+TOKEN : {
+  <NUMBER: (["0"-"9"])+ >
+  | "+"
+}
+
+double Start() :
+{
+  double left, right;
+  Token tok;
+}
+{
+  tok = <NUMBER>
+  { left = Double.parseDouble(tok.image); }
+  "+"
+  tok = <NUMBER>
+  { right = Double.parseDouble(tok.image); }
+  { return left + right; }
+}

@@ -1,0 +1,20 @@
+PARSER_BEGIN(Example)
+public class Example {
+  public static void main(String args[]) throws ParseException {
+    Example parser = new Example(System.in);
+    parser.Input();
+  }
+}
+PARSER_END(Example)
+
+void Input() :
+{}
+{
+  MatchedBraces() ( "\n" | "\r" )* <EOF>
+}
+
+void MatchedBraces() :
+{}
+{
+  "{" [ MatchedBraces() ] "}"
+}

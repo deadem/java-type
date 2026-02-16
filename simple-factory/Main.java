@@ -1,11 +1,11 @@
-import java.lang.reflect.InvocationTargetException;
+// import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.ArrayList;
 
 class FactorySerializer {
-    static private List<Class<? extends Serializable>> serializers = List.of(
-        CSVSerializer.class,
-        JSONSerializer.class
+    static private List<WithExtension> serializers = List.of(
+        new CSVSerializer(),
+        new JSONSerializer()
     );
 
     static public Serializable create(String filename) throws ClassNotFoundException {
@@ -13,16 +13,11 @@ class FactorySerializer {
             ? filename.substring(filename.lastIndexOf('.') + 1)
             : "";
 
-        for (Class<? extends Serializable> current : serializers) {
-            try {
-                if (ext.equals(current.getField("extension").get(null))) {
-                    return current.getDeclaredConstructor().newInstance();
-                }
-            } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
-                // Skip errors
+        for (WithExtension current : serializers) {
+            if (ext.equals(current.getExtension())) {
+                return current.create();
             }
         }
-
         throw new ClassNotFoundException(filename);
     }
 }

@@ -1,12 +1,22 @@
-public class JSONSerializer implements Serializable {
-    public static String extension = "json";
-
+public class JSONSerializer implements WithExtension {
     @Override
-    public String serialize() {
-        return "example";
+    public String getExtension() {
+        return "json";
+    }
+
+    private class Impl implements Serializable {
+        @Override
+        public String serialize() {
+            return "example-json";
+        }
+
+        @Override
+        public void deserialize(String csvData) {
+        }
     }
 
     @Override
-    public void deserialize(String csvData) {
+    public Impl create() {
+        return new Impl();
     }
 }

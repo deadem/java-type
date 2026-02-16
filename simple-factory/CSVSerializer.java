@@ -1,12 +1,22 @@
-public class CSVSerializer implements Serializable {
-    public static String extension = "csv";
-
+public class CSVSerializer implements WithExtension {
     @Override
-    public String serialize() {
-        return "example";
+    public String getExtension() {
+        return "csv";
+    }
+
+    private class Impl implements Serializable {
+        @Override
+        public String serialize() {
+            return "example-csv";
+        }
+
+        @Override
+        public void deserialize(String csvData) {
+        }
     }
 
     @Override
-    public void deserialize(String csvData) {
+    public Impl create() {
+        return new Impl();
     }
 }
